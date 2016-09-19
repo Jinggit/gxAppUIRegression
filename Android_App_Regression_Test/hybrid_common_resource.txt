@@ -1,0 +1,27 @@
+*** Variables ***
+${ENV}            Prod
+${TARGET}         Phone
+${REMOTE_URL}     http://127.0.0.1:4723/wd/hub
+${PLATFORM_NAME}    Android
+${PLATFORM_VERSION}    5.0
+${APP}            /Users/guanhua.jing/Downloads/chuanty.apk
+${DEVICE_NAME}    Galaxy Note3    # It Test (SGH-I337M)
+${PACKAGE}        com.hsohealth13
+${AUTOMATION_NAME}    Appium
+${TIMEOUT}        20
+${SCREENCAST PATH}    ${OUTPUT DIR}/screencast
+${APPACTIVITY}    com.hsohealth.MainActivity
+${UDID}           ${EMPTY}
+${BUNDLEID}       ${EMPTY}
+${IMAGE SIMILARITY}    97.99    # Similarity(%)
+${IMAGE ORIGINAL PATH}    ${OUTPUT DIR}/original/${ENV}/${PLATFORM_NAME}/${DEVICE_NAME}    # Lib Image Path
+${IMAGE TEMP PATH}    ${OUTPUT DIR}/1st/${ENV}/${PLATFORM_NAME}/${DEVICE_NAME}    # Temp Image Path
+${IMAGE DIFF PATH}    ${OUTPUT DIR}/diff/${ENV}/${PLATFORM_NAME}/${DEVICE_NAME}    # Diff Image Path
+${IMAGE NEW PATH}    ${OUTPUT DIR}/new/${ENV}/${PLATFORM_NAME}/${DEVICE_NAME}    # New Iamge Path
+${INDEX}          0    # Image Index
+${SCREENSHOTCOMP}    1    # 0:No , 1:Yes
+${MEMBER_ADMIN_ACCOUNT}    13718470010
+${MEMBER_ADMIN_PASSWORD}    123456
+${IFUPGRADE}      SKIP
+${OCR_PIC_LOCATION}    /Users/guanhua.jing/Desktop/OCR
+${OCR_CIRCLE}     8

@@ -1,0 +1,6 @@
+*** Settings ***
+Library           AppiumLibrary
+Resource          chat_page_keywords.txt
+Resource          signin_page_keywords.txt
+Resource          hybrid_public_resource.txt
+Resource          setting_page_keywords.txt

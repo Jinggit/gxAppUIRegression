@@ -1,0 +1,11 @@
+*** Settings ***
+Resource          hybrid_common_resource.txt
+Library           AppiumLibrary    run_on_failure=AppiumLibrary.Capture Page Screenshot
+Resource          hybrid_public_resource.txt
+
+*** Keywords ***
+Login
+    [Arguments]    ${name}    ${password}
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,'用户名')]    ${name}
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,'请输入密码')]    ${password}
+    Wait and Run Keyword    Click Element    //*[contains(@text,'登录')]

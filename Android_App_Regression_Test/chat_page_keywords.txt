@@ -1,0 +1,103 @@
+*** Settings ***
+Resource          hybrid_common_resource.txt
+Library           AppiumLibrary    run_on_failure=AppiumLibrary.Capture Page Screenshot
+Library           String
+Resource          hybrid_public_resource.txt
+
+*** Keywords ***
+Calc Input
+    [Arguments]    ${input_list}
+    @{calc_input_list}=    Split String    ${input_list}    ,
+    : FOR    ${input}    IN    @{calc_input_list}
+    \    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="${input}"]
+
+Click Feetype
+    [Arguments]    ${viewgroup_container}    ${dot_locator}    ${text}
+    ${redo_time}=    Get Matching Xpath Count    ${dot_locator}
+    ${redo_time}=    Convert To Integer    ${redo_time}
+    : FOR    ${INDEX}    IN RANGE    1    ${redo_time}
+    \    Comment    Wait and Run Keyword    Click Element    ${dot_locator}[${INDEX}]
+    \    ${status}    ${value}=    Run Keyword And Ignore Error    Click Feetype Text    ${text}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+    \    Wait and Run Keyword    Swipe Element Horizontal From Right Hybrid    ${viewgroup_container}
+    \    ${status}    ${value}=    Run Keyword And Ignore Error    Click Feetype Text    ${text}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+
+Click Feetype Text
+    [Arguments]    ${text}
+    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="${text}"]
+
+Select Pictures From Allum
+    [Arguments]    ${qty}
+    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="从相册中选择"]
+    ${qty}=    Convert To Integer    ${qty}
+    : FOR    ${seq}    IN RANGE    1    ${qty+1}
+    \    Wait and Run Keyword    Click Element    xpath=(//android.widget.ImageButton[@resource-id="${PACKAGE}:id/id_item_select"])[${seq}]
+    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="完成"]
+
+Select Date Range
+    [Arguments]    ${locator}    ${syear}    ${smonth}    ${sdate}    ${eyear}    ${emonth}
+    ...    ${edate}
+    [Documentation]    如果输入时间大于当前时间需要向上滑动直到找到元素
+    ...
+    ...    如果输入时间小于当前时间需要向下互动直到找到元素
+    ...
+    ...    如果没有发现要找的元素则返回Not found
+    ...
+    ...    如果输入今天则选择今天按钮
+    ${locator_stime}=    Set Variable    ${syear}年${smonth}月
+    ${locator_etime}=    Set Variable    ${eyear}年${emonth}月
+    ${element_locator_stime}=    Set Variable    //*[android.widget.TextView[@text="${locator_stime}"]]//android.widget.TextView[@text="${sdate}"]
+    ${element_locator_etime}=    Set Variable    //*[android.widget.TextView[@text="${locator_etime}"]]//android.widget.TextView[@text="${edate}"]
+    ${smonth}=    Run Keyword If    ${smonth} < 10    Set Variable    0${smonth}
+    ...    ELSE    Set Variable    ${smonth}
+    ${emonth}=    Run Keyword If    ${emonth} < 10    Set Variable    0${emonth}
+    ...    ELSE    Set Variable    ${emonth}
+    ${sdate}=    Run Keyword If    ${sdate} < 10    Set Variable    0${sdate}
+    ...    ELSE    Set Variable    ${sdate}
+    ${edate}=    Run Keyword If    ${edate} < 10    Set Variable    0${edate}
+    ...    ELSE    Set Variable    ${edate}
+    ${stime}=    Convert Date    ${syear}-${smonth}-${sdate}    epoch
+    ${etime}=    Convert Date    ${eyear}-${emonth}-${edate}    epoch
+    ${ctime}=    Get Time    epoch
+    ${stime}=    Convert To Integer    ${stime}
+    ${etime}=    Convert To Integer    ${etime}
+    ${ctime}=    Convert To Integer    ${ctime}
+    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="日期"]
+    Run Keyword If    ${stime} < ${ctime}    Swipe Down Element Until Element Visiable    ${locator}    ${element_locator_stime}    99    1
+    ...    ELSE IF    ${stime} > ${ctime}    Swipe Up Element Until Element Visiable    ${locator}    ${element_locator_stime}    99
+    ...    1
+    ...    ELSE    Log    =
+    Wait and Run Keyword    Click Element    ${element_locator_stime}
+    Run Keyword If    ${stime} < ${etime}    Swipe Up Element Until Element Visiable    ${locator}    ${element_locator_etime}    99    1
+    ...    ELSE IF    ${stime} > ${etime}    Swipe Down Element Until Element Visiable    ${locator}    ${element_locator_etime}    99
+    ...    1
+    ...    ELSE    Log    =
+    Wait and Run Keyword    Click Element    ${element_locator_etime}
+
+Select Single Date
+    [Arguments]    ${locator}    ${syear}    ${smonth}    ${sdate}
+    [Documentation]    如果输入时间大于当前时间需要向上滑动直到找到元素
+    ...
+    ...    如果输入时间小于当前时间需要向下互动直到找到元素
+    ...
+    ...    如果没有发现要找的元素则返回Not found
+    ${locator_stime}=    Set Variable    ${syear}年${smonth}月
+    ${element_locator_stime}=    Set Variable    //*[android.widget.TextView[@text="${locator_stime}"]]//android.widget.TextView[@text="${sdate}"]
+    ${smonth}=    Run Keyword If    ${smonth} < 10    Set Variable    0${smonth}
+    ...    ELSE    Set Variable    ${smonth}
+    ${sdate}=    Run Keyword If    ${sdate} < 10    Set Variable    0${sdate}
+    ...    ELSE    Set Variable    ${sdate}
+    ${stime}=    Convert Date    ${syear}-${smonth}-${sdate}    epoch
+    ${ctime}=    Get Time    epoch
+    ${stime}=    Convert To Integer    ${stime}
+    ${ctime}=    Convert To Integer    ${ctime}
+    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="日期"]
+    Run Keyword If    ${stime} < ${ctime}    Swipe Down Element Until Element Visiable    ${locator}    ${element_locator_stime}    99    1
+    ...    ELSE IF    ${stime} > ${ctime}    Swipe Up Element Until Element Visiable    ${locator}    ${element_locator_stime}    99
+    ...    1
+    ...    ELSE    Log    =
+    Wait and Run Keyword    Click Element    ${element_locator_stime}
+
+Select Today Button DateView
+    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="今天"]

@@ -1,0 +1,48 @@
+*** Settings ***
+Resource          all_pages_keywords.txt
+
+*** Test Cases ***
+Init
+    [Tags]    init
+    StartAppReset
+    Wait Until Page Contains Element    //android.widget.TextView[@text="让报销成为快事一件"]
+    PartialSnapshot    //android.widget.TextView[@text="让报销成为快事一件"]
+    Login    19930366339    123456    #13718470010
+    Read Later
+    Confirmation Cancel
+    Wait Until Page Contains Element    //android.widget.TextView[@text="易快报"]
+    Click Add Button
+    Click Add Consumption Button
+    Edit Comsumption
+    SleepApp
+    Snapshot
+    PartialSnapshot    //android.support.v4.view.ViewPager[@resource-id="${PACKAGE}:id/viewPager"]
+    Click Feetype    //android.support.v4.view.ViewPager[@resource-id="${PACKAGE}:id/viewPager"]    //android.widget.LinearLayout[@resource-id="${PACKAGE}:id/viewGroup"]/android.widget.ImageView    住宿
+    Input Consumption Value    1,2,.,0,0,-,1,=
+    Select Date Range    //android.widget.ListView    2016    1    15    2016    1
+    ...    20
+    Click Select Pictures Icon
+    Select Pictures From Allum    2
+    Wait Utill Image Loading Icon disappers
+    ${consume_desc}=    Make Random String    ${EMPTY}
+    Describe Consumption    ${consume_desc}
+    Click Concumption Save Icon
+    Confirmation Cancel
+    Scroll Down Until Element Visiable    //android.widget.TextView[contains(@text,"${consume_desc}")]    20    1
+    Delete Consumption Via Consume Description    ${consume_desc}
+    Scroll Down Until Element Visiable    //android.widget.TextView[contains(@text,"201512150607")]    10    5
+    Confirmation Cancel
+    [Teardown]    Close Application and Screenshot Comparison
+
+Sandbox
+    [Tags]    sandbox
+    StartAppReset
+    Login    gaoyachen    hso2016
+    Wait Until Page Contains    绩效    ${TIMEOUT}
+    Wait and Run Keyword    Click Element    //*[contains(@text,'新建档案')]
+    Swipe Up Element Until Element Visiable    //android.widget.ScrollView[1]    //*[contains(@text,'无业')]    99    1
+    Wait and Run Keyword    Click Element    //*[contains(@text,'无业')]
+    Close Application
+    [Teardown]
+
+*** Keywords ***

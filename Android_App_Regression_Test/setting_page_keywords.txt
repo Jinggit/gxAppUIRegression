@@ -1,0 +1,8 @@
+*** Settings ***
+Resource          hybrid_public_resource.txt
+Resource          hybrid_common_resource.txt
+Library           AppiumLibrary    run_on_failure=AppiumLibrary.Capture Page Screenshot
+
+*** Keywords ***
+Click Config
+    Click Text    设置

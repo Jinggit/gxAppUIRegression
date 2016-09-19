@@ -1,0 +1,292 @@
+*** Settings ***
+Resource          hybrid_common_resource.txt
+Library           AppiumLibrary    run_on_failure=AppiumLibrary.Capture Page Screenshot
+Library           String
+Library           OperatingSystem
+Library           DateTime
+
+*** Keywords ***
+Wait and Run Keyword
+    [Arguments]    ${operation}    ${locator}    @{rest_arg}
+    AppiumLibrary.Get Source
+    AppiumLibrary.Wait Until Page Contains Element    ${locator}    ${TIMEOUT}
+    Run Keyword    ${operation}    ${locator}    @{rest_arg}
+
+SleepApp
+    sleep    5
+
+Swipe Element Vertical From Bottom Hybrid
+    [Arguments]    ${locator}
+    ${coordinator}=    Get Location Coordinator    ${locator}
+    ${size}=    Get Element Size    ${locator}
+    ${position}=    Calculate Offset    ${coordinator}    ${size}    0.75,0.75
+    ${xy}=    Split String    ${position}    ,
+    ${x}=    Set Variable    ${xy[0]}
+    ${y}=    Set Variable    ${xy[1]}
+    AppiumLibrary.Swipe    ${x}    ${y}    ${x}    0.5    2000
+
+Swipe Element Horizontal From Right Hybrid
+    [Arguments]    ${locator}
+    ${coordinator}=    Get Location Coordinator    ${locator}
+    ${size}=    Get Element Size    ${locator}
+    ${position}=    Calculate Offset    ${coordinator}    ${size}    0.75,0.75
+    ${xy}=    Split String    ${position}    ,
+    ${x}=    Set Variable    ${xy[0]}
+    ${y}=    Set Variable    ${xy[1]}
+    AppiumLibrary.Swipe    ${x}    ${y}    0.05    ${y}    2000
+
+Scroll Down Until Element Visiable
+    [Arguments]    ${locator}    ${retry}    ${internal}
+    : FOR    ${index}    IN RANGE    ${retry}
+    \    AppiumLibrary.Get Source
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    ${internal}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+    \    AppiumLibrary.Swipe    0.5    0.1    0.5    0.9    3000
+
+Click Element Label
+    [Arguments]    ${field_name}
+    ScrollandTap Android    xpath=//android.view.View[contains(@content-desc,"${field_name}")]/following::node()[1]
+
+Tap Element Android
+    [Arguments]    ${locator}
+    ${coordinator}=    Get Location Coordinator    ${locator}
+    ${size}=    Get Element Size    ${locator}
+    ${position}=    Calculate Offset    ${coordinator}    ${size}    0.1,0.1
+    Tap Coordinator    ${position}
+    Log    Clicking
+
+ScrollIntoView Android
+    [Arguments]    ${locator}
+    AppiumLibrary.Wait Until Page Contains Element    ${locator}    ${TIMEOUT}
+    ${size}=    get screen size
+    ${screen_height}=    Convert To Integer    ${size['height']}
+    ${coordinator}=    Get Location Coordinator    ${locator}
+    ${x}    ${y}=    Split String    ${coordinator}    ,
+    ${locator_y_coordinator}=    Convert To Integer    ${y}
+    ${times_floor}=    Run Keyword If    ${locator_y_coordinator} > ${screen_height}    Evaluate    math.floor(float(${locator_y_coordinator})/float(${screen_height}))    math
+    ...    ELSE    Set Variable    ${1}
+    Comment    ${times_floor}=    Convert To String    ${times_floor}
+    ${rest_move}=    Run Keyword If    (((float(${locator_y_coordinator})/float(${screen_height})-${times_floor}))+0.45) < 0.99    Evaluate    0.99-(((float(${locator_y_coordinator})/float(${screen_height})-${times_floor}))+0.45)
+    ...    ELSE    Evaluate    1.99-(((float(${locator_y_coordinator})/float(${screen_height})-${times_floor}))+0.45)
+    ${times}=    Run Keyword If    (((float(${locator_y_coordinator})/float(${screen_height})-${times_floor}))+0.45) > 0.99    Set Variable    ${times_floor+1}
+    ...    ELSE    Set Variable    ${times_floor}
+    Comment    ${rest_move}=    Evaluate    0.99-(((float(${locator_y_coordinator})/float(${screen_height})-${times_floor}))+0.4)
+    Comment    ${rest_move}=    Evaluate    1.99-(((float(${locator_y_coordinator})/float(${screen_height})-${times_floor}))+0.4)
+    ${times}=    Convert To Integer    ${times}
+    ${rest_move}=    Convert To Number    ${rest_move}    2
+    Repeat Doing    ${times-1}    3    Swipe    0.5    0.99    0.5
+    ...    0.01    4000
+    Comment    Repeat Keyword    ${times-1}    Swipe    0.5    0.99    0.5
+    ...    0.01    4000
+    Run Keyword If    ${locator_y_coordinator} > ${screen_height}    Swipe    0.5    0.99    0.5    ${rest_move}
+    ...    4000
+
+Swipe Element Vertical From Top Hybrid
+    [Arguments]    ${locator}
+    ${coordinator}=    Get Location Coordinator    ${locator}
+    ${size}=    Get Element Size    ${locator}
+    ${position}=    Calculate Offset    ${coordinator}    ${size}    0.75,0.75
+    ${xy}=    Split String    ${position}    ,
+    ${x}=    Set Variable    ${xy[0]}
+    ${y}=    Set Variable    ${xy[1]}
+    AppiumLibrary.Swipe    ${x}    0.5    ${x}    ${y}    3000
+
+Repeat Doing
+    [Arguments]    ${times}    ${interval}    ${keyword}    @{rest}
+    : FOR    ${index}    IN RANGE    1    ${times+1}
+    \    sleep    ${interval}
+    \    Run Keyword    ${keyword}    @{rest}
+    \    Log    "${keyword}" ${index}/${times}
+
+Lock and Unlock
+    Lock    5
+    Wakeup
+    Swipe To Unlock
+
+Wait Until Element Disappeared
+    [Arguments]    ${locator}    ${timeout}
+    ${timeout}    Convert To Integer    ${timeout}
+    : FOR    ${tm}    IN RANGE    1    ${timeout}
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    AppiumLibrary.Element Should Be Enabled    ${locator}
+    \    Run Keyword If    '${status}' == 'FAIL'    Exit For Loop
+    \    Sleep    1
+
+Fast Scrolling Down
+    [Arguments]    ${repeat}    ${interval}
+    Repeat Keyword    ${repeat}    Swipe    0.5    0.5    0.5    0.1
+    ...    ${interval}
+
+Clear Android Test Env
+    Empty Directory    ${SCREENCAST PATH}
+
+Start Screencastor
+    [Arguments]    ${last}
+    ${filename}=    Set Variable    ${SUITE NAME}-${TEST NAME}
+    Login Server    @{Server Account}
+    SSHLibrary.Write    /Users/guanhua.jing/sdk/platform-tools/screencastor.sh "${filename}" ${last}    INFO
+
+Stop Screencastor
+    Read Until    Done
+    SSHLibrary.Get File    /Users/guanhua.jing/Desktop/applog/*.mp4    ${OUTPUT DIR}/screencast/
+
+Force Stop App
+    Login Server    @{Server Account}
+    SSHLibrary.Write    /Users/guanhua.jing/sdk/platform-tools/force_stop_app.sh ${PACKAGE} &    INFO
+    sleep    5
+
+Make Random String
+    [Arguments]    ${pre}
+    ${yyyy}    ${mm}    ${dd}    ${hh}    ${min}    ${ss}=    Get Time
+    ...    year,month,day,hour, min, sec
+    ${randstr}=    Set Variable    ${pre}${yyyy}${mm}${dd}${hh}${min}${ss}
+    [Return]    ${randstr}
+
+Get Matching Xpath Count
+    [Arguments]    ${locator}
+    ${count}=    Set Variable    0
+    ${count}=    Convert To Integer    ${count}
+    : FOR    ${INDEX}    IN RANGE    1    9999
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}[${INDEX}]
+    \    Run Keyword If    '${status}' == 'FAIL'    Exit For Loop
+    \    ${count}=    Evaluate    ${count}+1
+    [Return]    ${count}
+
+StartAppNoReset
+    AppiumLibrary.Open Application    ${REMOTE_URL}    ${PLATFORM_NAME}    ${PLATFORM_VERSION}    ${DEVICE_NAME}    ${APP}    ${AUTOMATION_NAME}
+    ...    ${PACKAGE}    ${APPACTIVITY}
+
+StartAppReset
+    Comment    Open Application    ${REMOTE_URL}    None    ${PLATFORM_NAME}    ${PLATFORM_VERSION}    ${DEVICE_NAME}
+    ...    ${APP}    ${AUTOMATION_NAME}    ${PACKAGE}    ${APPACTIVITY}    ${EMPTY}    ${BUNDLEID}
+    ...    ${UDID}
+    Open Application    ${REMOTE_URL}    platformName=${PLATFORM_NAME}    platformVersion=${PLATFORM_VERSION}    deviceName=${DEVICE_NAME}    app=${APP}    appPackage=${PACKAGE}
+    ...    appActivity=${APPACTIVITY}    unicodeKeyboard=true    resetKeyboard=true
+
+Confirmation Cancel
+    Run Keyword And Ignore Error    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="取消"]
+
+Snapshot
+    [Documentation]    Capture the screenshots and name them.
+    ${INDEX}    Convert To Integer    ${INDEX}
+    Capture Page Screenshot    filename=${IMAGE TEMP PATH}/${SUITE NAME}-${TEST NAME}-${INDEX}.png
+    Set Suite Variable    ${INDEX}    ${INDEX+1}
+
+PartialSnapshot
+    [Arguments]    ${locator}
+    [Documentation]    Capture the screenshots and name them.
+    ${INDEX}    Convert To Integer    ${INDEX}
+    Wait Until Page Contains Element    ${locator}    ${TIMEOUT}
+    Capture Partial Screenshot    ${locator}    filename=${IMAGE TEMP PATH}/${SUITE NAME}-${TEST NAME}-${INDEX}.png
+    Set Suite Variable    ${INDEX}    ${INDEX+1}
+
+Create And Clear Test Evn
+    [Documentation]    Init test execution environment
+    Create Directory    ${IMAGE TEMP PATH}
+    Create Directory    ${IMAGE DIFF PATH}
+    Create Directory    ${IMAGE ORIGINAL PATH}
+    Create Directory    ${IMAGE NEW PATH}
+    Empty Directory    ${IMAGE TEMP PATH}
+    Empty Directory    ${IMAGE DIFF PATH}
+    Empty Directory    ${IMAGE NEW PATH}
+    Remove Files    ${OUTPUT DIR}${/}appium-screenshot*.png
+
+Close Application Without Screenshot Comparison
+    [Documentation]    Close the browser and compare the screenshot.
+    Close Application
+    Empty Directory    ${IMAGE TEMP PATH}
+
+Close Application and Screenshot Comparison
+    [Documentation]    Close the browser and compare the screenshot.
+    Close Application
+    Run Keyword And Continue On Failure    Compare Picture
+    Empty Directory    ${IMAGE TEMP PATH}
+
+Compare Picture
+    [Documentation]    Compare images between ORIGINAL folder and 1ST folder, move difference to the DIFF folder.
+    ${diffcount}=    Comp Pic    ${IMAGE ORIGINAL PATH}    ${IMAGE TEMP PATH}    ${IMAGE DIFF PATH}    ${IMAGE NEW PATH}    ${${IMAGE SIMILARITY}}
+    Run Keyword If    '${SCREENSHOTCOMP}' == '1'    Should Be Equal As Numbers    ${diffcount}    0    msg="Scrrenshot Comparison Fail "
+
+Swipe Down Element Until Element Visiable
+    [Arguments]    ${locator_container}    ${locator}    ${retry}    ${internal}
+    : FOR    ${index}    IN RANGE    ${retry}
+    \    AppiumLibrary.Get Source
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    ${internal}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+    \    Swipe Element Vertical From Top Hybrid    ${locator_container}
+
+Scroll Up Until Element Visiable
+    [Arguments]    ${locator}    ${retry}    ${internal}
+    : FOR    ${index}    IN RANGE    ${retry}
+    \    AppiumLibrary.Get Source
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    ${internal}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+    \    AppiumLibrary.Swipe    0.5    0.9    0.5    0.1    3000
+
+Swipe Up Element Until Element Visiable
+    [Arguments]    ${locator_container}    ${locator}    ${retry}    ${internal}
+    Wait Until Page Contains Element    ${locator_container}    ${TIMEOUT}
+    : FOR    ${index}    IN RANGE    ${retry}
+    \    AppiumLibrary.Get Source
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    ${internal}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+    \    Swipe Element Vertical From Bottom Hybrid    ${locator_container}
+
+Extract Number From Text
+    [Arguments]    ${locator}
+    ${text}=    Get Statictext Value    ${locator}
+    ${num}=    Remove String Using Regexp    ${text}    \\D
+    [Return]    ${num}
+
+Select Element In List
+    [Arguments]    ${list_locator_container}    ${locator}
+    Swipe Up Element Until Element Visiable    ${list_locator_container}    ${locator}    99    1
+    Wait and Run Keyword    Click Element    ${locator}
+
+Click Back
+    Wait and Run Keyword    Click Element    //android.widget.ImageView[@resource-id="${PACKAGE}:id/imageview_left"]
+
+Click Next
+    Wait and Run Keyword    Click Element    //android.widget.ImageView[@resource-id="${PACKAGE}:id/imageview_right_left"]
+
+Confirmation Yes
+    Run Keyword And Ignore Error    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="确定"]
+
+App Upgrade
+    Run Keyword If    '${IFUPGRADE}'=='FALSE'    Confirmation Cancel
+    ...    ELSE IF    '${IFUPGRADE}'=='TRUE'    Confirmation Yes
+
+Click Text
+    [Arguments]    ${text}
+    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="${text}"]
+
+Click Text Button
+    [Arguments]    ${text}
+    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Wait and Run Keyword    Click Element    //android.widget.Button[@text="${text}"]
+
+Click Element By Element ID
+    [Arguments]    ${id}
+    Log    //*[@resource-id="${PACKAGE}:id/${id}"]
+    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Wait and Run Keyword    Click Element    //*[@resource-id="${PACKAGE}:id/${id}"]
+
+Input Text By Element ID
+    [Arguments]    ${id}    ${text}
+    Wait and Run Keyword    Input Text    //*[@resource-id="${PACKAGE}:id/${id}"]    ${text}
+
+Scroll Left Until Element Visiable
+    [Arguments]    ${locator}    ${retry}    ${internal}
+    : FOR    ${index}    IN RANGE    ${retry}
+    \    AppiumLibrary.Get Source
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    ${internal}
+    \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
+    \    AppiumLibrary.Swipe    0.9    0.5    0.1    0.5    500
+
+Get Content By ID
+    [Arguments]    ${id}
+    ${value}=    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Get Statictext Value    //*[@resource-id="${PACKAGE}:id/${id}"]
+    [Return]    ${value}
+
+Toast Message Should Be
+    [Arguments]    ${message}
+    ${status}=    Recognize Text On Multiple Screenshots    ${OCR_CIRCLE}    ${OCR_PIC_LOCATION}    ${message}
+    Should Be Equal    ${status}    True
+    [Teardown]    #Empty Directory    ${OCR_PIC_LOCATION}
