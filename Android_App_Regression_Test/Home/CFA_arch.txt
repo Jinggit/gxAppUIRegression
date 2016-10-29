@@ -1,0 +1,16 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+watch_CFA_archv
+    StartAppReset
+    Navpage
+    Swipe Up Element Until Element Visiable    //*[contains(@resource-id,"flHomeFrgMainContent")]    xpath=(//*[contains(@resource-id,"ivHomeTearcherTop")])[1]
+    Wait and Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"ivHomeTearcherTop")])[1]
+    Wait Until Page Contains    历史战绩    ${TIMEOUT}
+    Wait and Run Keyword    Click Element    //*[@content-desc="进入直播"]
+    ${title}=    Get Statictext Value    //*[contains(@resource-id,"tvTitleName")]
+    Should Be Equal    ${title}    直播
+    [Teardown]    Close Application Without Screenshot Comparison
+
+*** Keywords ***

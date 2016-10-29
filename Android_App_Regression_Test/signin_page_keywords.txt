@@ -6,6 +6,26 @@ Resource          hybrid_public_resource.txt
 *** Keywords ***
 Login
     [Arguments]    ${name}    ${password}
-    Wait and Run Keyword    Input Text Native    //*[contains(@text,'用户名')]    ${name}
-    Wait and Run Keyword    Input Text Native    //*[contains(@text,'请输入密码')]    ${password}
-    Wait and Run Keyword    Click Element    //*[contains(@text,'登录')]
+    Click Text    登 录 | 注 册
+    Login_Normal_Account    ${name}    ${password}
+
+Logout
+    Click Text    我
+    Click Config
+    Click Text    退出我的账号
+    Click Text    确 \ 定
+
+NavPage
+    Wait Until Page Contains Element    //*[contains(@resource-id,"iv_splash")]    ${TIMEOUT}
+    Fast Scrolling From Right    3    1
+    Click Element By Element ID    iv_experience
+    Run Keyword And Ignore Error    Click Text    取消    #取消升级弹窗
+
+Login_Normal_Account
+    [Arguments]    ${name}    ${password}
+    Click Text    账号密码登录
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,"实盘账号")]    ${name}
+    Input Text By Element ID    et_password    ${password}
+    Click Element By Element ID    cb_password_visible
+    Wait Until Page Contains    ${password}
+    Click Element By Element ID    tv_login

@@ -1,0 +1,14 @@
+*** Settings ***
+Test Teardown     Close Application Without Screenshot Comparison
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+chat_text
+    StartAppReset
+    NavPage
+    live_chat_text    hi,this is qa test.
+
+chat_voice
+    StartAppReset
+    NavPage
+    live_chat_voice    3

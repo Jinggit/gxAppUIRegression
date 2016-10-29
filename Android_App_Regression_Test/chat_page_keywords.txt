@@ -101,3 +101,17 @@ Select Single Date
 
 Select Today Button DateView
     Wait and Run Keyword    Click Element    //android.widget.TextView[@text="今天"]
+
+live_chat_text
+    [Arguments]    ${msg}
+    Click Element By Element ID    lvTitleRight
+    Input Text By Element ID    et_sendmessage    ${msg}
+    Click Text    发送
+    Wait Until Page Contains    ${msg}    ${TIMEOUT}
+
+live_chat_voice
+    [Arguments]    ${long}
+    Click Element By Element ID    lvTitleRight
+    Click Element By Element ID    btn_set_mode_voice
+    Long Press    //*[@text="按住说话"]    5000
+    Wait Until Page Contains Element    //*[contains(@resource-id,"bubble")]    ${TIMEOUT}

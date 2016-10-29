@@ -1,0 +1,18 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+logout_normal
+    [Template]    logout_normal_temp
+    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+
+*** Keywords ***
+logout_normal_temp
+    [Arguments]    ${user}    ${password}
+    StartAppReset
+    NavPage
+    Login    ${user}    ${password}
+    Logout
+    Click Config
+    Wait Until Element Disappeared    //*[@text="退出我的账号"]    ${TIMEOUT}
+    [Teardown]    Close Application Without Screenshot Comparison

@@ -1,0 +1,13 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+Sandbox
+    [Tags]    sandbox
+    StartAppReset
+    [Teardown]
+
+init
+    [Teardown]    Close Application Without Screenshot Comparison
+
+*** Keywords ***

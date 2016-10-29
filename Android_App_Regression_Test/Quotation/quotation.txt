@@ -1,0 +1,7 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+get_quotation
+
+*** Keywords ***

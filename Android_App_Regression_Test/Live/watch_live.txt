@@ -1,0 +1,15 @@
+*** Settings ***
+Test Teardown     Close Application Without Screenshot Comparison
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+go_to_live_room
+    StartAppReset
+    NavPage
+    Click Text    直播
+    Swipe Up Element Until Element Visiable    //*[contains(@resource-id,"refreshListView")]    //*[contains(@resource-id,"tvNoData")]
+    Wait and Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"iv_favicon")])[last()]
+    Click Text    登 \ 录
+    Login_Normal_Account    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+    Wait and Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"iv_favicon")])[last()]
+    Wait Until Page Contains    问答    ${TIMEOUT}

@@ -1,0 +1,37 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+avatar
+    StartAppReset
+    NavPage
+    Click Text    我
+    Click Element By Element ID    rl_header
+    [Teardown]    Close Application Without Screenshot Comparison
+
+nickname
+    StartAppReset
+    NavPage
+    Login    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+    Click Text    我
+    Click Element By Element ID    rl_header
+    Click Text    昵称
+    ${numbers}=    Generate Random String    4    [NUMBERS]
+    Input Text By Element ID    et_nick_name    自动化测试QA${numbers}
+    Click Text    提交
+    Statistic Text Should Be    tv_nick_name    自动化测试QA${numbers}(审核中)
+    [Teardown]    Close Application Without Screenshot Comparison
+
+name
+    StartAppReset
+    NavPage
+    Login    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+    Click Text    我
+    Click Element By Element ID    rl_header
+    Click Text    姓名
+    Input Text By Element ID    et_real_name    自动化测试
+    Click Text    提交
+    Statistic Text Should Be    tv_real_name    自动化测试
+    [Teardown]    Close Application Without Screenshot Comparison
+
+*** Keywords ***

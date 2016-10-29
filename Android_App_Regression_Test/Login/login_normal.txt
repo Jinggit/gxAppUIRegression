@@ -1,0 +1,16 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
+*** Test Cases ***
+login_normal
+    [Template]    login_normal_temp
+    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+
+*** Keywords ***
+login_normal_temp
+    [Arguments]    ${user}    ${password}
+    StartAppReset
+    NavPage
+    Login    ${user}    ${password}
+    Logout
+    [Teardown]    Close Application Without Screenshot Comparison

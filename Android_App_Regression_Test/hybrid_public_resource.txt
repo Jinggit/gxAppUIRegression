@@ -23,7 +23,7 @@ Swipe Element Vertical From Bottom Hybrid
     ${xy}=    Split String    ${position}    ,
     ${x}=    Set Variable    ${xy[0]}
     ${y}=    Set Variable    ${xy[1]}
-    AppiumLibrary.Swipe    ${x}    ${y}    ${x}    0.5    2000
+    AppiumLibrary.Swipe    ${x}    ${y}    ${x}    0.25    2000
 
 Swipe Element Horizontal From Right Hybrid
     [Arguments]    ${locator}
@@ -223,11 +223,11 @@ Scroll Up Until Element Visiable
     \    AppiumLibrary.Swipe    0.5    0.9    0.5    0.1    3000
 
 Swipe Up Element Until Element Visiable
-    [Arguments]    ${locator_container}    ${locator}    ${retry}    ${internal}
+    [Arguments]    ${locator_container}    ${locator}
     Wait Until Page Contains Element    ${locator_container}    ${TIMEOUT}
-    : FOR    ${index}    IN RANGE    ${retry}
+    : FOR    ${index}    IN RANGE    99
     \    AppiumLibrary.Get Source
-    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    ${internal}
+    \    ${status}    ${value} =    Run Keyword And Ignore Error    Wait Until Page Contains Element    ${locator}    1
     \    Run Keyword If    '${status}' == 'PASS'    Exit For Loop
     \    Swipe Element Vertical From Bottom Hybrid    ${locator_container}
 
@@ -257,7 +257,7 @@ App Upgrade
 
 Click Text
     [Arguments]    ${text}
-    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Wait and Run Keyword    Click Element    //android.widget.TextView[@text="${text}"]
+    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Wait and Run Keyword    Click Element    //*[@text="${text}"]
 
 Click Text Button
     [Arguments]    ${text}
@@ -270,7 +270,7 @@ Click Element By Element ID
 
 Input Text By Element ID
     [Arguments]    ${id}    ${text}
-    Wait and Run Keyword    Input Text    //*[@resource-id="${PACKAGE}:id/${id}"]    ${text}
+    Wait and Run Keyword    Input Text Native    //*[@resource-id="${PACKAGE}:id/${id}"]    ${text}
 
 Scroll Left Until Element Visiable
     [Arguments]    ${locator}    ${retry}    ${internal}
@@ -282,6 +282,7 @@ Scroll Left Until Element Visiable
 
 Get Content By ID
     [Arguments]    ${id}
+    AppiumLibrary.Wait Until Page Contains Element    //*[@resource-id="${PACKAGE}:id/${id}"]    ${TIMEOUT}
     ${value}=    Run Keyword If    '${PLATFORM_NAME}' == 'Android'    Get Statictext Value    //*[@resource-id="${PACKAGE}:id/${id}"]
     [Return]    ${value}
 
@@ -290,3 +291,19 @@ Toast Message Should Be
     ${status}=    Recognize Text On Multiple Screenshots    ${OCR_CIRCLE}    ${OCR_PIC_LOCATION}    ${message}
     Should Be Equal    ${status}    True
     [Teardown]    #Empty Directory    ${OCR_PIC_LOCATION}
+
+Go Back Ignore Error
+    ${status}    ${value} =    Run Keyword And Ignore Error    Click Element By Element ID    ivTitleBack
+    Run Keyword If    '${status}' == 'FAIL'    Go Back
+
+Fast Scrolling From Right
+    [Arguments]    ${repeat}    ${interval}
+    ${repeat}=    Convert To Integer    ${repeat}
+    : FOR    ${index}    IN RANGE    ${repeat}
+    \    Swipe    0.9    0.5    0.1    0.5    1000
+    \    sleep    ${interval}
+
+Statistic Text Should Be
+    [Arguments]    ${id}    ${text}
+    ${actual_text}=    Get Statictext Value    //*[contains(@resource-id,"${id}")]
+    Should Be Equal    ${actual_text}    ${text}

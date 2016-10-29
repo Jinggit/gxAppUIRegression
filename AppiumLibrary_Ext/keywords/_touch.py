@@ -67,9 +67,9 @@ class _TouchKeywords(KeywordGroup):
         driver = self._current_application()
         return driver.get_window_size() 
 
-    def long_press(self, locator):
-        """ Long press the element """
+def long_press(self, locator, time):
+    """ Long press the element """
         driver = self._current_application()
         element = self._element_find(locator, True, True)
-        long_press = TouchAction(driver).long_press(element)
-        long_press.perform()        
+        long_press = TouchAction(driver).long_press(element).wait(time).release()
+        long_press.perform()
