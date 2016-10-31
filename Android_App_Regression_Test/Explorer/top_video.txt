@@ -10,3 +10,4 @@ video selected
     Wait And Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"ivFindVideoImg")])[1]
     Click Element By Element ID    gsvideoview
     Statistic Text Should Not Be    palynowtime    00:00:00
+    [Teardown]    Close Application Without Screenshot Comparison

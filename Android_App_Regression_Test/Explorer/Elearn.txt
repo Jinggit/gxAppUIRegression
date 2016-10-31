@@ -10,3 +10,4 @@ class
     Click Text    基础课
     Click Text    第一章 现货投资介绍
     Click Text    第一节 \ 什么是现货交易
+    [Teardown]    Close Application Without Screenshot Comparison
