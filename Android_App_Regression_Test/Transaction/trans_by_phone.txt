@@ -1,2 +1,19 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
 *** Test Cases ***
-transaction
+transaction_tianjin
+    StartAppReset
+    NavPage
+    Login    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+    Click Text    行情
+    trans_item    自选    银
+    Wait Until Page Contains    交易环境    ${TIMEOUT}
+
+*** Keywords ***
+trans_item
+    [Arguments]    ${category}    ${item}
+    Click Element By Element ID    ivHqOpenMoreType
+    Wait and Run Keyword    Click Element    //*[contains(@text,"${category}")]
+    Click Text    ${item}
+    Click Text    交易
