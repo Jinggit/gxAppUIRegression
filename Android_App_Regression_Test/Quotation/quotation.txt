@@ -26,20 +26,20 @@ quotation_reminder
 
 *** Keywords ***
 add_remove_quotation
-    [Arguments]    ${catagory}    ${item}    ${operation}
+    [Arguments]    ${category}    ${item}    ${operation}
     Click Element By Element ID    ivHqOpenMoreType
-    Click Text    ${catagory}
+    Wait and Run Keyword    Click Element    //*[contains(@text,"${category}")]
     Click Text    ${item}
     Click Text    ${operation}
     Click Element By Element ID    viewBack
 
 set_reminder
-    [Arguments]    ${catagory}    ${item}    ${max}
+    [Arguments]    ${category}    ${item}    ${max}
     Click Element By Element ID    ivHqOpenMoreType
-    Click Text    ${catagory}
+    Wait and Run Keyword    Click Element    //*[contains(@text,"${category}")]
     Click Text    ${item}
     Click Text    提醒
     Click Text    登 \ 录
     Login_Normal_Account    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
     Input Text By Element ID    etHqMessagePriceHigh    ${max}
-    Click Element By Element ID    viewBack
+    Click Element By Element ID    ivTitleBack
