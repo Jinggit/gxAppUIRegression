@@ -1,1 +1,11 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
 *** Test Cases ***
+new activity
+    StartAppReset
+    Navpage
+    Click Text    发现
+    Click Text    活动
+    Wait And Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"ivFindActivity")])[1]
+    Wait Until Page Contains Element    //*[contains(@content-desc,"现货白银投资交易首选平台")]    ${TIMEOUT}

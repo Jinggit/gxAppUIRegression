@@ -1,1 +1,12 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
 *** Test Cases ***
+video selected
+    StartAppReset
+    Navpage
+    Click Text    发现
+    Click Text    精彩视频
+    Wait And Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"ivFindVideoImg")])[1]
+    Click Element By Element ID    gsvideoview
+    Statistic Text Should Not Be    palynowtime    00:00:00

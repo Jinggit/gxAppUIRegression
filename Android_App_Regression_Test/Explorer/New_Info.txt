@@ -1,2 +1,22 @@
+*** Settings ***
+Resource          ../all_pages_keywords.txt
+
 *** Test Cases ***
 get news
+    [Template]    explorer_news_temp
+    国鑫评论
+    分析研究
+    国际财经
+    机构观点
+
+*** Keywords ***
+explorer_news_temp
+    [Arguments]    ${menu}
+    StartAppReset
+    Navpage
+    Click Text    发现
+    Click Text    资讯
+    Click Text    ${menu}
+    Wait And Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"tv_news_title")])[1]
+    Wait Until Page Contains Element    //*[contains(@content-desc,"绑定直播间,即刻获得分析师建议")]    ${TIMEOUT}
+    [Teardown]    Close Application Without Screenshot Comparison

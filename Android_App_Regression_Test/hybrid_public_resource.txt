@@ -307,3 +307,8 @@ Statistic Text Should Be
     [Arguments]    ${id}    ${text}
     ${actual_text}=    Get Statictext Value    //*[contains(@resource-id,"${id}")]
     Should Be Equal    ${actual_text}    ${text}
+
+Statistic Text Should Not Be
+    [Arguments]    ${id}    ${text}
+    ${actual_text}=    Get Statictext Value    //*[contains(@resource-id,"${id}")]
+    Should Not Be Equal    ${actual_text}    ${text}
