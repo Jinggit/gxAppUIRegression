@@ -2,15 +2,14 @@
 Resource          ../all_pages_keywords.txt
 
 *** Test Cases ***
-mobile express
-    [Template]    login_express_temp
+regrister express
+    [Template]    register_temp
     13900000000    123456
 
 *** Keywords ***
-login_express_temp
+register_temp
     [Arguments]    ${user}    ${password}
     StartAppReset
     NavPage
-    Login Express    ${user}    ${password}
-    Wait Until Page Contains    快速注册
+    Signup express    ${user}    ${password}
     [Teardown]    Close Application Without Screenshot Comparison

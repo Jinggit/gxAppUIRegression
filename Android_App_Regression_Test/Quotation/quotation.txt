@@ -2,6 +2,44 @@
 Resource          ../all_pages_keywords.txt
 
 *** Test Cases ***
-get_quotation
+add_del_quotation
+    StartAppReset
+    NavPage
+    Login    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+    Click Text    行情
+    add_remove_quotation    津贵所    铝    加自选
+    add_remove_quotation    齐鲁商品    现货铜    加自选
+    add_remove_quotation    自选    铝    删自选
+    add_remove_quotation    自选    现货铜    删自选
+    Wait Until Element Disappeared    //*[@text="铝"]    ${TIMEOUT}
+    Wait Until Element Disappeared    //*[@text="现货铜"]    ${TIMEOUT}
+    [Teardown]    Close Application Without Screenshot Comparison
+
+quotation_reminder
+    StartAppReset
+    NavPage
+    Click Text    行情
+    set_reminder    自选    银    1
+    Click Text    查看详情
+    Wait Until Page Contains    报价提醒    ${TIMEOUT}
+    [Teardown]    Close Application Without Screenshot Comparison
 
 *** Keywords ***
+add_remove_quotation
+    [Arguments]    ${catagory}    ${item}    ${operation}
+    Click Element By Element ID    ivHqOpenMoreType
+    Click Text    ${catagory}
+    Click Text    ${item}
+    Click Text    ${operation}
+    Click Element By Element ID    viewBack
+
+set_reminder
+    [Arguments]    ${catagory}    ${item}    ${max}
+    Click Element By Element ID    ivHqOpenMoreType
+    Click Text    ${catagory}
+    Click Text    ${item}
+    Click Text    提醒
+    Click Text    登 \ 录
+    Login_Normal_Account    ${APP_QA_USERNAME}    ${APP_QA_PASSWORD}
+    Input Text By Element ID    etHqMessagePriceHigh    ${max}
+    Click Element By Element ID    viewBack

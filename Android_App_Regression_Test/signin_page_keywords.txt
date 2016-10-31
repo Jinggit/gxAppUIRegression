@@ -29,3 +29,21 @@ Login_Normal_Account
     Click Element By Element ID    cb_password_visible
     Wait Until Page Contains    ${password}
     Click Element By Element ID    tv_login
+
+Login_Express
+    [Arguments]    ${name}    ${password}
+    Click Text    登 录 | 注 册
+    Click Text    手机快捷登录
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,"请输入手机号")]    ${name}
+    Click Text    获取验证码
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,"请输入验证码")]    ${password}
+    Click Element By Element ID    tv_login
+
+Signup_Express
+    [Arguments]    ${name}    ${password}
+    Click Text    登 录 | 注 册
+    Click Text    快速注册
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,"请输入手机号")]    ${name}
+    Click Text    获取验证码
+    Wait and Run Keyword    Input Text Native    //*[contains(@text,"请输入验证码")]    ${password}
+    Click Text    提交验证码
