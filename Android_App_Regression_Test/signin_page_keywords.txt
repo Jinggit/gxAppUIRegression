@@ -19,7 +19,7 @@ NavPage
     Wait Until Page Contains Element    //*[contains(@resource-id,"iv_splash")]    ${TIMEOUT}
     Fast Scrolling From Right    3    1
     Click Element By Element ID    iv_experience
-    Run Keyword And Ignore Error    Click Text    取消    #取消升级弹窗
+    Comment    Run Keyword And Ignore Error    Click Text    取消    #取消升级弹窗
 
 Login_Normal_Account
     [Arguments]    ${name}    ${password}
