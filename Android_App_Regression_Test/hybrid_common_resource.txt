@@ -8,7 +8,7 @@ ${APP}            /Users/guanhua.jing/Downloads/guoxinjinfu.apk
 ${DEVICE_NAME}    G3    # It Test (SGH-I337M)
 ${PACKAGE}        com.jin91.preciousmetal
 ${AUTOMATION_NAME}    Appium
-${TIMEOUT}        60
+${TIMEOUT}        15
 ${SCREENCAST PATH}    ${OUTPUT DIR}/screencast
 ${APPACTIVITY}    guoxin.app.android.activity.start.StartActivity
 ${UDID}           ${EMPTY}
