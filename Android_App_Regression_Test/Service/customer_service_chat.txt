@@ -9,6 +9,7 @@ chat_text
     live_chat_text    hi,this is qa test.
 
 chat_voice
+    [Tags]    sandbox
     StartAppReset
     NavPage
     live_chat_voice    3
