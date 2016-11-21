@@ -27,8 +27,10 @@ Login_Normal_Account
     Wait and Run Keyword    Input Text Native    //*[contains(@text,"实盘账号")]    ${name}
     Input Text By Element ID    et_password    ${password}
     Click Element By Element ID    cb_password_visible
-    Wait Until Page Contains    ${password}
+    Wait Until Page Contains    ${password}    ${TIMEOUT}
+    Sleep 3
     Click Element By Element ID    tv_login
+    Sleep 3
 
 Login_Express
     [Arguments]    ${name}    ${password}
