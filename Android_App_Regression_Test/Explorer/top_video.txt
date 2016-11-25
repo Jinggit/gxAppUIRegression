@@ -9,7 +9,7 @@ video selected
     Click Text    精彩视频
     Wait And Run Keyword    Click Element    xpath=(//*[contains(@resource-id,"ivFindVideoImg")])[1]
     Wait Until Element Disappeared    //*[@text="努力加载中"]    ${TIMEOUT}
-    Sleep    30
+    Sleep    15
     Click Element By Element ID    gsvideoview
     Statistic Text Should Not Be    palynowtime    00:00:00
     [Teardown]    Close Application Without Screenshot Comparison
