@@ -29,6 +29,7 @@ add_remove_quotation
     [Arguments]    ${category}    ${item}    ${operation}
     Click Element By Element ID    ivHqOpenMoreType
     Wait and Run Keyword    Click Element    //*[contains(@text,"${category}")]
+    Sleep    10
     Click Text    ${item}
     Click Text    ${operation}
     Click Element By Element ID    viewBack

@@ -3,12 +3,12 @@ ${ENV}            Prod
 ${TARGET}         Phone
 ${REMOTE_URL}     http://127.0.0.1:4723/wd/hub
 ${PLATFORM_NAME}    Android
-${PLATFORM_VERSION}    5.0.1
-${APP}            /Users/guanhua.jing/Downloads/guoxinjinfu.apk
-${DEVICE_NAME}    G3    # It Test (SGH-I337M)
+${PLATFORM_VERSION}    5.1.1
+${APP}            /Users/cloud/Downloads/app-release11-24.apk
+${DEVICE_NAME}    ColorOS    # It Test (SGH-I337M)
 ${PACKAGE}        com.jin91.preciousmetal
 ${AUTOMATION_NAME}    Appium
-${TIMEOUT}        30
+${TIMEOUT}        60
 ${SCREENCAST PATH}    ${OUTPUT DIR}/screencast
 ${APPACTIVITY}    guoxin.app.android.activity.start.StartActivity
 ${UDID}           ${EMPTY}

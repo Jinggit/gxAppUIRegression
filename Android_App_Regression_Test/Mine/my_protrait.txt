@@ -33,5 +33,3 @@ name
     Click Text    提交
     Statistic Text Should Be    tv_real_name    自动化测试
     [Teardown]    Close Application Without Screenshot Comparison
-
-*** Keywords ***
