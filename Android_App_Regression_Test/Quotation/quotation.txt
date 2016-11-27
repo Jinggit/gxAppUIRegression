@@ -30,6 +30,7 @@ add_remove_quotation
     Wait and Run Keyword    Click Element    //*[contains(@text,"${category}")]
     Sleep    10
     Click Text    ${item}
+    Sleep    3
     Click Text    ${operation}
     Click Element By Element ID    viewBack
 
