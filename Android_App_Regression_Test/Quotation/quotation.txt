@@ -20,8 +20,7 @@ quotation_reminder
     NavPage
     Click Text    行情
     set_reminder    自选    银    1
-    Click Text    查看详情
-    Wait Until Page Contains    报价提醒    ${TIMEOUT}
+    Wait Until Page Contains    日K    ${TIMEOUT}
     [Teardown]    Close Application Without Screenshot Comparison
 
 *** Keywords ***

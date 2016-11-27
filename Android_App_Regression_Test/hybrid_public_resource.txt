@@ -306,6 +306,7 @@ Fast Scrolling From Right
 
 Statistic Text Should Be
     [Arguments]    ${id}    ${text}
+    Wait Until Page Contains Element    //*[contains(@resource-id,"${id}")]    ${TIMEOUT}
     ${actual_text}=    Get Statictext Value    //*[contains(@resource-id,"${id}")]
     Should Be Equal    ${actual_text}    ${text}
 
