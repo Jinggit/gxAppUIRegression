@@ -4,6 +4,7 @@ Library           AppiumLibrary    run_on_failure=AppiumLibrary.Capture Page Scr
 Library           String
 Library           OperatingSystem
 Library           DateTime
+Library           OperatingSystem
 
 *** Keywords ***
 Wait and Run Keyword

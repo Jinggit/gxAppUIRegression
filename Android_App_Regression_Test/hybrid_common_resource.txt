@@ -8,6 +8,7 @@ ${APP}            /Users/cloud/Downloads/app-release11-24.apk
 ${DEVICE_NAME}    ColorOS    # It Test (SGH-I337M)
 ${PACKAGE}        com.jin91.preciousmetal
 ${AUTOMATION_NAME}    Appium
+${ADB_PATH}       /Users/cloud/Library/Android/sdk/platform-tools
 ${TIMEOUT}        60
 ${SCREENCAST PATH}    ${OUTPUT DIR}/screencast
 ${APPACTIVITY}    guoxin.app.android.activity.start.StartActivity

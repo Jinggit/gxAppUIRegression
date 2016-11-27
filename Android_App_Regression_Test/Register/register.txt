@@ -1,4 +1,5 @@
 *** Settings ***
+Default Tags      express
 Resource          ../all_pages_keywords.txt
 
 *** Test Cases ***

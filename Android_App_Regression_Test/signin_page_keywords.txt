@@ -43,7 +43,9 @@ Signup_Express
     [Arguments]    ${name}    ${password}
     Click Text    登 录 | 注 册
     Click Text    快速注册
+    ${result}=    Run    ${ADB_PATH}/adb shell ime set com.sohu.inputmethod.sogouoem/.SogouIME
     Wait and Run Keyword    Input Text Native    //*[contains(@text,"请输入手机号")]    ${name}
+    Run    ${ADB_PATH}/adb shell ime set io.appium.android.ime/.UnicodeIME
     Click Text    获取验证码
     Wait and Run Keyword    Input Text Native    //*[contains(@text,"请输入验证码")]    ${password}
     Click Text    提交验证码

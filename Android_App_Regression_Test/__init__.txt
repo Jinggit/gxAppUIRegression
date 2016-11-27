@@ -1,5 +1,5 @@
 *** Settings ***
 Suite Setup       Create And Clear Test Evn
+Force Tags        prod
 Library           AppiumLibrary
 Resource          all_pages_keywords.txt
-
